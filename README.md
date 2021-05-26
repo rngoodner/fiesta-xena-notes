@@ -2,8 +2,8 @@
 
 Notes on how to build/run FIESTA on Xena at UNM CARC.
 
-FIESTA: https://github.com/CUP-ECS/fiesta  
-CARC Xena: https://carc.unm.edu/systems/Systems1.html
+- FIESTA: https://github.com/CUP-ECS/fiesta  
+- CARC Xena: https://carc.unm.edu/systems/Systems1.html
 
 ## Helpful resources
 
@@ -41,7 +41,7 @@ Using Spack will enable us to build hdf5 for openmpi. Note that Xena has a syste
 
 ### Configure spack
 
-We need to tell spack which packages we want so use from the host system so that it does not download and build new versions. This both saves time and leverages difficult to build/configure packages that the system administrators have already optimized, like mpi.
+We need to tell spack which packages we want so use from the host system so it does not download and build new versions. This both saves time and leverages difficult to build/configure packages that the system administrators have already optimized, like mpi.
 
 - Create `~/.spack/packages.yaml` and put the following:
   ```
@@ -89,3 +89,37 @@ Note if you have multiple versions of the same package installed you need to det
 - `cd build`
 - `cmake .. -DCUDA=on`
 - `make -j`
+
+## Run FIESTA
+
+### Interactive session
+
+Assuming 4 nodes
+
+- `salloc --job-name=fiesta-interactive --ntasks=4 --time=02:00:00 --partition=singleGPU --gpus-per-node=1`
+- `spack load cmake cuda openmpi hdf5`
+- `export OMPI_MCA_fs_ufs_lock_algorithm=1`
+- Change directory to FIESTA clone
+- `cd test/idexp3dterrain/`
+- Edit the `--MPI Processors` section of `fiesta.lua` for the number of nodes available such that `procsx * procsy * procsz == num_nodes`.
+For this 4 node example we can use `procsx = 2`, `procsy = 2`, and `procsz = 1`.
+- `mpirun -n 4 ../../build/fiesta ./fiesta.lua --kokkos-num-devices=1`
+
+### Batch job
+- Create a slurm script with the contents like below, editing paths and other values as necessary.
+  ```
+  #!/bin/bash
+  #SBATCH --job-name=fiesta-spack
+  #SBATCH --output=./logs/fiesta-spack.%J.out
+  #SBATCH --error=./logs/fiesta-spack.%J.err
+  #SBATCH --ntasks=4
+  #SBATCH --time=00:30:00
+  #SBATCH --partition=singleGPU
+  #SBATCH --gres=gpu:1
+
+  spack load cmake cuda openmpi hdf5
+  export OMPI_MCA_fs_ufs_lock_algorithm=1
+  cd ~/programming/fiesta-fork/test/idexp3dterrain/
+  mpirun --mca orte_base_help_aggregate 0 -n 4 ../../build/fiesta ./fiesta.lua --kokkos-num-devices=1
+  ```
+ - `sbatch <slurm-script>`
