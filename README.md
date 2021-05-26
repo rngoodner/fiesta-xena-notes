@@ -1,9 +1,6 @@
 # FIESTA Xena notes
 
-Notes on how to build/run FIESTA on Xena at UNM CARC.
-
-- FIESTA: https://github.com/CUP-ECS/fiesta  
-- CARC Xena: https://carc.unm.edu/systems/Systems1.html
+Notes on how to build/run [FIESTA](https://github.com/CUP-ECS/fiesta) on [Xena](https://carc.unm.edu/systems/Systems1.html) at [UNM CARC](https://carc.unm.edu).
 
 # Helpful resources
 
