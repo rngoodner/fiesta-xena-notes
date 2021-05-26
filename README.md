@@ -7,6 +7,7 @@ Notes on how to build/run [FIESTA](https://github.com/CUP-ECS/fiesta) on [Xena](
 - [CARC HPC documentation](https://github.com/UNM-CARC/QuickBytes/blob/master/README.md)
 - [Lmod documentation](https://lmod.readthedocs.io/en/latest/010_user.html)
 - [Spack documentation](https://spack.readthedocs.io/en/latest/)
+- [Singularity documentation](https://sylabs.io/guides/3.7/user-guide/)
 
 # Build using Lmod for dependencies
 
