@@ -105,7 +105,8 @@ For this 4 node example we can use `procsx = 2`, `procsy = 2`, and `procsz = 1`.
 - `mpirun -n 4 ../../build/fiesta ./fiesta.lua --kokkos-num-devices=1`
 
 ## Batch job
-- Create a slurm script with the contents like below, editing paths, module loading, and other values as necessary.
+- Create a slurm script with the contents like below.
+Edit paths, module loading, and other values as necessary.
   ```
   #!/bin/bash
   #SBATCH --job-name=fiesta-spack
