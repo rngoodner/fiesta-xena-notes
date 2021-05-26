@@ -96,7 +96,7 @@ Note if you have multiple versions of the same package installed you need to det
 Assuming 4 nodes
 
 - `salloc --job-name=fiesta-interactive --ntasks=4 --time=02:00:00 --partition=singleGPU --gpus-per-node=1`
-- `spack load cmake cuda openmpi hdf5`
+- Load dependencies with `module load gcc intel-mpi cuda cmake hdf5` or `spack load cmake cuda openmpi hdf5` for Lmod or Spack, respectively
 - `export OMPI_MCA_fs_ufs_lock_algorithm=1`
 - Change directory to FIESTA clone
 - `cd test/idexp3dterrain/`
@@ -105,7 +105,7 @@ For this 4 node example we can use `procsx = 2`, `procsy = 2`, and `procsz = 1`.
 - `mpirun -n 4 ../../build/fiesta ./fiesta.lua --kokkos-num-devices=1`
 
 ## Batch job
-- Create a slurm script with the contents like below, editing paths and other values as necessary.
+- Create a slurm script with the contents like below, editing paths, module loading, and other values as necessary.
   ```
   #!/bin/bash
   #SBATCH --job-name=fiesta-spack
