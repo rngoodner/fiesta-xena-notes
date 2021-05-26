@@ -11,7 +11,7 @@ Notes on how to build/run FIESTA on Xena at UNM CARC.
 - [Lmod documentation](https://lmod.readthedocs.io/en/latest/010_user.html)
 - [Spack documentation](https://spack.readthedocs.io/en/latest/)
 
-# Build using Lmod for dependancies
+# Build using Lmod for dependencies
 
 Note that all the versions of hdf5 available on Xena via Lmod require intel-mpi.
 
@@ -23,9 +23,11 @@ Note that all the versions of hdf5 available on Xena via Lmod require intel-mpi.
 - `cmake .. -DCUDA=on`
 - `make -j`
 
-# Build using Spack for dependancies
+# Build using Spack for dependencies
 
-Using Spack will enable us to build hdf5 for openmpi. Note that Xena has a system wide install of Spack, but we need a copy that runs from our home directory so we can install/build new packages and perform other actions like creating environments. Also note that while we are doing this to build hdf5 for openmp, the instructions below can be modified to build hdf5 for intel-mpi and to run FIESTA with intel-mpi.
+Using Spack will enable us to build hdf5 for openmpi.
+Note that Xena has a system wide install of Spack, but we need a copy that runs from our home directory so we can install/build new packages and perform other actions like creating environments.
+Also note that while we are doing this to build hdf5 for openmpi, the instructions below can be modified to build hdf5 for intel-mpi and to run FIESTA with intel-mpi.
 
 ## Install user copy of Spack
 
