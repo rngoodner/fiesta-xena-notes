@@ -119,6 +119,6 @@ For this 4 node example we can use `procsx = 2`, `procsy = 2`, and `procsz = 1`.
   spack load cmake cuda openmpi hdf5
   export OMPI_MCA_fs_ufs_lock_algorithm=1
   cd ~/programming/fiesta-fork/test/idexp3dterrain/
-  mpirun --mca orte_base_help_aggregate 0 -n 4 ../../build/fiesta ./fiesta.lua --kokkos-num-devices=1
+  mpirun -n 4 ../../build/fiesta ./fiesta.lua --kokkos-num-devices=1
   ```
  - `sbatch <slurm-script>`
