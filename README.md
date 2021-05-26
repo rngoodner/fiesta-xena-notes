@@ -43,7 +43,7 @@ Also note that while we are doing this to build hdf5 for openmpi, the instructio
 
 We need to tell spack which packages we want so use from the host system so it does not download and build new versions. This both saves time and leverages difficult to build/configure packages that the system administrators have already optimized, like mpi.
 
-- Create `~/.spack/packages.yaml` and put the following:
+- Create `~/.spack/packages.yaml` with the following:
   ```
   packages:
     openmpi:
