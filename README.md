@@ -5,13 +5,13 @@ Notes on how to build/run FIESTA on Xena at UNM CARC.
 - FIESTA: https://github.com/CUP-ECS/fiesta  
 - CARC Xena: https://carc.unm.edu/systems/Systems1.html
 
-## Helpful resources
+# Helpful resources
 
 - [CARC HPC documentation](https://github.com/UNM-CARC/QuickBytes/blob/master/README.md)
 - [Lmod documentation](https://lmod.readthedocs.io/en/latest/010_user.html)
 - [Spack documentation](https://spack.readthedocs.io/en/latest/)
 
-## Build using Lmod for dependancies
+# Build using Lmod for dependancies
 
 Note that all the versions of hdf5 available on Xena via Lmod require intel-mpi.
 
@@ -23,11 +23,11 @@ Note that all the versions of hdf5 available on Xena via Lmod require intel-mpi.
 - `cmake .. -DCUDA=on`
 - `make -j`
 
-## Build using Spack for dependancies
+# Build using Spack for dependancies
 
 Using Spack will enable us to build hdf5 for openmpi. Note that Xena has a system wide install of Spack, but we need a copy that runs from our home directory so we can install/build new packages and perform other actions like creating environments. Also note that while we are doing this to build hdf5 for openmp, the instructions below can be modified to build hdf5 for intel-mpi and to run FIESTA with intel-mpi.
 
-### Install user copy of Spack
+## Install user copy of Spack
 
 - `mkdir -p ~/opt`
 - `cd ~/opt`
@@ -39,7 +39,7 @@ Using Spack will enable us to build hdf5 for openmpi. Note that Xena has a syste
   ```
  - Restart shell or source `. ~/.bashrc`
 
-### Configure spack
+## Configure spack
 
 We need to tell spack which packages we want so use from the host system so it does not download and build new versions. This both saves time and leverages difficult to build/configure packages that the system administrators have already optimized, like mpi.
 
@@ -80,8 +80,8 @@ We need to tell spack which packages we want so use from the host system so it d
 - `spack load cmake cuda openmpi hdf5`
 
 Note if you have multiple versions of the same package installed you need to determine which one to use and load. Investigate with `spack find -lv` and `spack graph <hash>`, and then load with something like `spack load /ju6wcsj /vlvnxev /hlsv7m3 /p523iht /lqq6usl`.
-  
-  ### Build FIESTA
+
+## Build FIESTA
   
 - `git clone git@github.com:CUP-ECS/fiesta.git`
 - `cd fiesta`
@@ -90,9 +90,9 @@ Note if you have multiple versions of the same package installed you need to det
 - `cmake .. -DCUDA=on`
 - `make -j`
 
-## Run FIESTA
+# Run FIESTA
 
-### Interactive session
+## Interactive session
 
 Assuming 4 nodes
 
@@ -105,7 +105,7 @@ Assuming 4 nodes
 For this 4 node example we can use `procsx = 2`, `procsy = 2`, and `procsz = 1`.
 - `mpirun -n 4 ../../build/fiesta ./fiesta.lua --kokkos-num-devices=1`
 
-### Batch job
+## Batch job
 - Create a slurm script with the contents like below, editing paths and other values as necessary.
   ```
   #!/bin/bash
