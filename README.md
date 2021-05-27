@@ -50,7 +50,7 @@ We need to tell spack which packages we want so use from the host system so it d
         externals:
         - spec: openmpi@4.0.5
           modules:
-          - openmpi/4.0.5-yl4z
+          - openmpi/4.0.5-cuda-77v5
         buildable: False
     intel-mpi:
         externals:
