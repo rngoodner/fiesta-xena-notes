@@ -13,7 +13,7 @@ Notes on how to build/run [FIESTA](https://github.com/CUP-ECS/fiesta) on [Xena](
 
 Note that all the versions of hdf5 available on Xena via Lmod require intel-mpi.
 
-- `git clone git@github.com:CUP-ECS/fiesta.git`
+- `git clone https://github.com/CUP-ECS/fiesta.git`
 - `cd fiesta`
 - `mkdir build`
 - `cd build`
@@ -83,7 +83,7 @@ Note if you have multiple versions of the same package installed you need to det
 
 ## Build FIESTA
   
-- `git clone git@github.com:CUP-ECS/fiesta.git`
+- `git clone https://github.com/CUP-ECS/fiesta.git`
 - `cd fiesta`
 - `mkdir build`
 - `cd build`
