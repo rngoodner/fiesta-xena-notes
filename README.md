@@ -37,7 +37,7 @@ Also note that while we are doing this to build hdf5 for openmpi, the instructio
   . ~/opt/spack/share/spack/setup-env.sh
   export PATH=~/opt/spack/bin:$PATH
   ```
- - Restart shell or source `. ~/.bashrc`
+ - Restart shell or source new .bashrc (`. ~/.bashrc`)
 
 ## Configure spack
 
