@@ -79,7 +79,7 @@ We need to tell spack which packages we want so use from the host system so it d
 - `spack install -v hdf5+threadsafe`
 - `spack load cmake cuda openmpi hdf5`
 
-Note if you have multiple versions of the same package installed you need to determine which one to use and load. Investigate with `spack find -lv` and `spack graph <hash>`, and then load with something like `spack load /ju6wcsj /vlvnxev /hlsv7m3 /p523iht /lqq6usl`.
+Note if you have multiple versions of the same package installed you need to determine which one to use and load. Investigate with `spack find -lv` and `spack graph <hash>`, and then load with something like `spack load /ju6wcsj`.
 
 ## Build FIESTA
   
