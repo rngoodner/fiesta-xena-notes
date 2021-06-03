@@ -159,9 +159,9 @@ packages:
 ### upstreams.yaml
 
 An `upstreams.yaml` file placed in `~/.spack/` can be used to chain a user's Spack installation to the upstream system Spack installation.
-This enables Spack to use all of the system installed Spack packages, while still allowing the user to install new ones as needed.
+This enables Spack to use all of the system installed Spack packages, while still allowing a non-root user to install new packages as needed.
 Note that on Xena it is best to unload all system environment modules to avoid conflicts.
-One may also need to compile a new version of gcc, such as 10.2.0, instead of using the one already provided by the system or packages such as perl may fail to build.
+One may also need to compile a new version of gcc, such as 10.2.0, instead of using the one already provided by the system else packages such as perl may fail to build.
 
 Here is an example file that was successfully used on Xena to chain Spack installations.
 
