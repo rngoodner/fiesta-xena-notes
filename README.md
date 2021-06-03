@@ -249,7 +249,6 @@ cd build
 cmake .. -DCUDA=on -DKokkos_ARCH_KEPLER35=ON
 make -j
 make install
-mkdir /workspace/test # dir to mount mutable test dirs to
 
 # cleanup
 despacktivate
