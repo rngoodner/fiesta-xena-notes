@@ -1,7 +1,7 @@
 # FIESTA Xena notes
 
 Notes on how to build/run [FIESTA](https://github.com/CUP-ECS/fiesta) on [Xena](https://carc.unm.edu/systems/Systems1.html) at [UNM CARC](https://carc.unm.edu).
-These notes will cover three methods: 1. byhand, 2. with spack, and 3. with singularity.
+These notes will cover three methods: 1. by hand, 2. with spack, and 3. with singularity.
 
 # Helpful resources
 
