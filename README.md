@@ -35,8 +35,8 @@ Paths will likely need to be modified.
 ```
 #!/bin/bash
 #SBATCH --job-name=fiesta-hand
-#SBATCH --output=./logs/fiesta-hand.%J.log
-#SBATCH --error=./logs/fiesta-hand.%J.log
+#SBATCH --output=./logs/fiesta-hand.%J.out
+#SBATCH --error=./logs/fiesta-hand.%J.err
 #SBATCH --ntasks=8
 #SBATCH --time=00:30:00
 #SBATCH --partition=singleGPU
