@@ -122,7 +122,7 @@ There are some modifications to the above method that one may want to do.
 
 By using a `packages.yaml` file placed in `~/.spack/` one can do many things such as specifying already installed environment modules to use.
 
-Here is an example file that was used successfully on Xena to reduce the number of packages compiled to just 2 packages, specifically openmpi and zlib.
+Here is an example file that was used successfully on Xena to reduce the number of packages compiled to just 2 packages, specifically hdf5 and zlib.
 
 ```
 packages:
