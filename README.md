@@ -10,7 +10,7 @@ These notes will cover three methods: 1. by hand, 2. with Spack, and 3. with Sin
 - [documentation](https://spack.readthedocs.io/en/latest/)
 - [Singularity documentation](https://sylabs.io/guides/3.7/user-guide/)
 
-# 1. By-hand
+# 1. By hand
 
 This method uses what is already available on the system.
 We will use environment modules (Lmod).
