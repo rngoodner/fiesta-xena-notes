@@ -1,13 +1,13 @@
 # FIESTA Xena notes
 
 Notes on how to build/run [FIESTA](https://github.com/CUP-ECS/fiesta) on [Xena](https://carc.unm.edu/systems/Systems1.html) at [UNM CARC](https://carc.unm.edu).
-These notes will cover three methods: 1. by hand, 2. with spack, and 3. with singularity.
+These notes will cover three methods: 1. by hand, 2. with Spack, and 3. with Singularity.
 
 # Helpful resources
 
 - [CARC HPC documentation](https://github.com/UNM-CARC/QuickBytes/blob/master/README.md)
 - [Lmod documentation](https://lmod.readthedocs.io/en/latest/010_user.html)
-- [Spack documentation](https://spack.readthedocs.io/en/latest/)
+- [documentation](https://spack.readthedocs.io/en/latest/)
 - [Singularity documentation](https://sylabs.io/guides/3.7/user-guide/)
 
 # 1. By-hand
@@ -53,7 +53,7 @@ mpirun -n 8 ~/programming/fiesta-hand/build/fiesta ./fiesta.lua --kokkos-num-dev
 
 This will use a local install of Spack so we can compile our own dependencies.
 
-## Install spack
+## Install Spack
 
 - `mkdir -p ~/opt`
 - `cd ~/opt`
@@ -158,12 +158,12 @@ packages:
 
 ### upstreams.yaml
 
-An `upstreams.yaml` file placed in `~/.spack/` can be used to chain a user's spack installation to the upstream system spack installation.
-This enables spack to use all of the system installed spack packages, while still allowing the user to install new ones as needed.
+An `upstreams.yaml` file placed in `~/.spack/` can be used to chain a user's Spack installation to the upstream system Spack installation.
+This enables Spack to use all of the system installed Spack packages, while still allowing the user to install new ones as needed.
 Note that on Xena it is best to unload all system environment modules to avoid conflicts.
 One may also need to compile a new version of gcc, such as 10.2.0, instead of using the one already provided by the system or packages such as perl may fail to build.
 
-Here is an example file that was successfully used on Xena to chain spack installations.
+Here is an example file that was successfully used on Xena to chain Spack installations.
 
 ```
 upstreams:
@@ -180,7 +180,7 @@ Singularity is a container platform that is common on HPC Clusters.
 ## Definition file
 
 This definition file uses a nvidia cuda container from dockerhub as a base to build on top of.
-To build a singularity container one must have root access.
+To build a Singularity container one must have root access.
 For this test I built the container on a local box and the uploaded it to Xena.
 To build a container from a definition file use: `sudo /usr/local/bin/singularity build <output-name>.sif <definition-file>`
 
