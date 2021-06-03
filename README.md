@@ -1,6 +1,7 @@
 # FIESTA Xena notes
 
 Notes on how to build/run [FIESTA](https://github.com/CUP-ECS/fiesta) on [Xena](https://carc.unm.edu/systems/Systems1.html) at [UNM CARC](https://carc.unm.edu).
+These notes will cover three methods: 1. byhand, 2. with spack, and 3. with singularity.
 
 # Helpful resources
 
@@ -9,25 +10,50 @@ Notes on how to build/run [FIESTA](https://github.com/CUP-ECS/fiesta) on [Xena](
 - [Spack documentation](https://spack.readthedocs.io/en/latest/)
 - [Singularity documentation](https://sylabs.io/guides/3.7/user-guide/)
 
-# Build using Lmod for dependencies
+# 1. By-hand
 
-Note that all the versions of hdf5 available on Xena via Lmod require intel-mpi.
+This method uses what is already available on the system.
+We will use environment modules (Lmod).
 
-- `git clone https://github.com/CUP-ECS/fiesta.git`
-- `cd fiesta`
-- `mkdir build`
-- `cd build`
-- `module load gcc intel-mpi cuda cmake hdf5`
-- `cmake .. -DCUDA=on`
-- `make -j`
+## Build
 
-# Build using Spack for dependencies
+```
+module purge
+module load gcc/10.2.0-3kjq intel-mpi/2020.2.254-rxha cuda/11.2.0-w6mf cmake/3.19.5-22ub hdf5/1.10.7-pvyi
+git clone https://github.com/CUP-ECS/fiesta.git
+cd fiesta
+mkdir build
+cd build
+cmake .. -DCUDA=on
+make -j
+```
 
-Using Spack will enable us to build hdf5 for openmpi.
-Note that Xena has a system wide install of Spack, but we need a copy that runs from our home directory so we can install/build new packages and perform other actions like creating environments.
-Also note that while we are doing this to build hdf5 for openmpi, the instructions below can be modified to build hdf5 for intel-mpi and to run FIESTA with intel-mpi.
+## Slurm batch script
 
-## Install user copy of Spack
+Make sure to read/modify the script before use.
+Paths will likely need to be modified.
+```
+#!/bin/bash
+#SBATCH --job-name=fiesta-hand
+#SBATCH --output=./logs/fiesta-hand.%J.log
+#SBATCH --error=./logs/fiesta-hand.%J.log
+#SBATCH --ntasks=8
+#SBATCH --time=00:30:00
+#SBATCH --partition=singleGPU
+#SBATCH --gres=gpu:1
+
+export OMPI_MCA_fs_ufs_lock_algorithm=1
+module purge
+module load gcc/10.2.0-3kjq intel-mpi/2020.2.254-rxha cuda/11.2.0-w6mf cmake/3.19.5-22ub hdf5/1.10.7-pvyi
+cd ~/programming/fiesta-hand/test/idexp3dterrain/
+mpirun -n 8 ~/programming/fiesta-hand/build/fiesta ./fiesta.lua --kokkos-num-devices=1
+```
+
+# 2. Spack
+
+This will use a local install of Spack so we can compile our own dependencies.
+
+## Install spack
 
 - `mkdir -p ~/opt`
 - `cd ~/opt`
@@ -39,88 +65,219 @@ Also note that while we are doing this to build hdf5 for openmpi, the instructio
   ```
  - Restart shell or source new .bashrc (`. ~/.bashrc`)
 
-## Configure spack
+## Build
+```
+module purge
+spack install gcc@10.2.0
+spack load gcc@10.2.0
 
-We need to tell spack which packages we want so use from the host system so it does not download and build new versions. This both saves time and leverages difficult to build/configure packages that the system administrators have already optimized, like mpi.
+echo 'spack:
+  concretization: together
+  specs:
+  - cmake
+  - cuda
+  - openmpi +cuda
+  - hdf5 +mpi +threadsafe
+  view: true' > ./fiesta-spack.yaml
+ 
+spack env create fiesta-spack fiesta-spack.yaml
+spack env activate fiesta-spack
+spack install
+spack load cmake cuda hdf5+mpi+threadsafe openmpi+cuda
+cmake .. -DCUDA=on
+make -j
+```
 
-- Create `~/.spack/packages.yaml` with the following:
-  ```
-  packages:
-    openmpi:
-        externals:
-        - spec: openmpi@4.0.5
-          modules:
-          - openmpi/4.0.5-cuda-77v5
-        buildable: False
-    intel-mpi:
-        externals:
-        - spec: intel-mpi@2020.2.254
-          modules:
-          - intel-mpi/2020.2.254-yvuf
-        buildable: False
-    cuda:
-        externals:
-        - spec: cuda@11.2.0
-          modules:
-          - cuda/11.2.0-w6mf
-        buildable: False
-    cmake:
-        externals:
-        - spec: cmake@3.19.5
-          modules:
-          - cmake/3.19.5-22ub
-        buildable: False
-    all:
-       compiler: [gcc@10.2.0]
-       providers:
-          mpi: [openmpi]
-  ```
-- `spack install cmake cuda openmpi`
-- `spack install -v hdf5+threadsafe`
-- `spack load cmake cuda openmpi hdf5`
+## Slurm batch script
 
-Note if you have multiple versions of the same package installed you need to determine which one to use and load. Investigate with `spack find -lv` and `spack graph <hash>`, and then load with something like `spack load /ju6wcsj`.
 
-## Build FIESTA
-  
-- `git clone https://github.com/CUP-ECS/fiesta.git`
-- `cd fiesta`
-- `mkdir build`
-- `cd build`
-- `cmake .. -DCUDA=on`
-- `make -j`
+Make sure to read/modify the script before use.
+Paths will likely need to be modified.
+This example uses hashes to uniquely identify packages which may or may not be necessary.
+```
+#!/bin/bash
+#SBATCH --job-name=fiesta-spack
+#SBATCH --output=./logs/fiesta-spack.%J.out
+#SBATCH --error=./logs/fiesta-spack.%J.err
+#SBATCH --ntasks=8
+#SBATCH --time=00:30:00
+#SBATCH --partition=singleGPU
+#SBATCH --gres=gpu:1
 
-# Run FIESTA
+export OMPI_MCA_fs_ufs_lock_algorithm=1
+module purge
+. ~/opt/spack/share/spack/setup-env.sh
+~/opt/spack/bin/spack env activate fiesta-spack
+~/opt/spack/bin/spack load /sqv6llp /sjettsf /drq3z5z /ulqjmjs # cmake cuda hdf5 openmpi
+cd ~/programming/fiesta-spack/test/idexp3dterrain/
+mpirun -n 8 ../../build/fiesta ./fiesta.lua --kokkos-num-devices=1
+```
 
-## Interactive session
+## Modifications
 
-Assuming 4 nodes
+Spack is a very powerful tool for managing dependencies and environments.
+There are some modifications to the above method that one may want to do.
 
-- `salloc --job-name=fiesta-interactive --ntasks=4 --time=02:00:00 --partition=singleGPU --gpus-per-node=1`
-- Load dependencies with `module load gcc intel-mpi cuda cmake hdf5` or `spack load cmake cuda openmpi hdf5` for Lmod or Spack, respectively
-- `export OMPI_MCA_fs_ufs_lock_algorithm=1`
-- Change directory to FIESTA clone
-- `cd test/idexp3dterrain/`
-- Edit the `--MPI Processors` section of `fiesta.lua` for the number of nodes available such that `procsx * procsy * procsz == num_nodes`.
-For this 4 node example we can use `procsx = 2`, `procsy = 2`, and `procsz = 1`.
-- `mpirun -n 4 ../../build/fiesta ./fiesta.lua --kokkos-num-devices=1`
+### packages.yaml
 
-## Batch job
-- Create a slurm script with contents like below.
-Edit paths, module loading, and other values as necessary.
-  ```
-  #!/bin/bash
-  #SBATCH --job-name=fiesta-spack
-  #SBATCH --output=./logs/fiesta-spack.%J.out
-  #SBATCH --error=./logs/fiesta-spack.%J.err
-  #SBATCH --ntasks=4
-  #SBATCH --time=00:30:00
-  #SBATCH --partition=singleGPU
-  #SBATCH --gres=gpu:1
+By using a `packages.yaml` file placed in `~/.spack/` one can do many things such as specifying already installed environment modules to use.
 
-  spack load cmake cuda openmpi hdf5
-  export OMPI_MCA_fs_ufs_lock_algorithm=1
-  cd ~/programming/fiesta-fork/test/idexp3dterrain/
-  mpirun -n 4 ../../build/fiesta ./fiesta.lua --kokkos-num-devices=1
-  ```
- - `sbatch <slurm-script>`
+Here is an example file that was used successfully on Xena to reduce the number of packages compiled to just 2 packages, specifically openmpi and zlib.
+
+```
+packages:
+  openmpi:
+      externals:
+      - spec: openmpi@4.0.5
+        modules:
+        - openmpi/4.0.5-cuda-77v5
+      buildable: False
+  intel-mpi:
+      externals:
+      - spec: intel-mpi@2020.2.254
+        modules:
+        - intel-mpi/2020.2.254-yvuf
+      buildable: False
+  cuda:
+      externals:
+      - spec: cuda@11.2.0
+        modules:
+        - cuda/11.2.0-w6mf
+      buildable: False
+  cmake:
+      externals:
+      - spec: cmake@3.19.5
+        modules:
+        - cmake/3.19.5-22ub
+      buildable: False
+  all:
+     compiler: [gcc@10.2.0]
+     providers:
+        mpi: [openmpi]
+```
+
+### upstreams.yaml
+
+An `upstreams.yaml` file placed in `~/.spack/` can be used to chain a user's spack installation to the upstream system spack installation.
+This enables spack to use all of the system installed spack packages, while still allowing the user to install new ones as needed.
+Note that on Xena it is best to unload all system environment modules to avoid conflicts.
+One may also need to compile a new version of gcc, such as 10.2.0, instead of using the one already provided by the system or packages such as perl may fail to build.
+
+Here is an example file that was successfully used on Xena to chain spack installations.
+
+```
+upstreams:
+  spack-instance-1:
+    install_tree: /opt/spack/opt/spack/
+    modules:
+      tcl: /opt/spack/share/spack/modules
+```
+
+# 3. Singularity
+
+Singularity is a container platform that is common on HPC Clusters.
+
+## Definition file
+
+This definition file uses a nvidia cuda container from dockerhub as a base to build on top of.
+To build a singularity container one must have root access.
+For this test I built the container on a local box and the uploaded it to Xena.
+To build a container from a definition file use: `sudo /usr/local/bin/singularity build <output-name>.sif <definition-file>`
+
+```
+Bootstrap: docker
+From: nvidia/cuda:11.3.0-devel-centos7
+Stage: build
+
+%setup
+
+%files
+# assumes fiesta cloned into ./fiesta so it can be copied into the container
+./fiesta /workspace/fiesta
+
+%environment
+export HOME=/workspace
+
+%post
+# updates
+yum -y update
+yum -y groupinstall "Development Tools"
+
+# working dir and new home
+mkdir -p /workspace
+chmod 777 workspace
+cd /workspace
+export HOME=/workspace
+
+# spack
+git clone https://github.com/spack/spack.git
+. $HOME/spack/share/spack/setup-env.sh
+spack install gcc@10.2.0 target=x86_64
+spack load gcc@10.2.0
+spack compiler find
+
+echo 'packages:
+  cuda:
+    externals:
+    - spec: cuda@11.3.0
+      prefix: /usr/local/cuda-11.3
+    buildable: False
+  all:
+    compiler: [gcc@10.2.0]
+    target: [x84_64]' > $HOME/.spack/packages.yaml
+
+echo 'spack:
+  concretization: together
+  specs:
+  - cmake
+  - cuda
+  - openmpi +cuda schedulers=slurm
+  - hdf5 +mpi +threadsafe
+  view: true' > $HOME/fiesta-spack.yaml
+
+# fiesta environment
+spack env create fiesta $HOME/fiesta-spack.yaml
+spack env activate fiesta
+spack install
+spack load cmake cuda openmpi hdf5
+
+# fiesta build
+cd /workspace/fiesta
+rm -rf build
+mkdir build
+cd build
+cmake .. -DCUDA=on -DKokkos_ARCH_KEPLER35=ON
+make -j
+make install
+mkdir /workspace/test # dir to mount mutable test dirs to
+
+# cleanup
+despacktivate
+
+%runscript
+. ~/spack/share/spack/setup-env.sh
+spack env activate fiesta
+/workspace/fiesta/build/fiesta
+```
+
+## Slurm batch script
+
+Make sure to read/modify the script before use.
+Paths will likely need to be modified.
+
+```
+#!/bin/bash
+#SBATCH --job-name=fiesta-singularity
+#SBATCH --output=./logs/fiesta-singularity.%J.out
+#SBATCH --error=./logs/fiesta-singularity.%J.err
+#SBATCH --ntasks=8
+#SBATCH --time=00:30:00
+#SBATCH --partition=singleGPU
+#SBATCH --gres=gpu:1
+
+export OMPI_MCA_fs_ufs_lock_algorithm=1
+module purge
+module load gcc/10.2.0-3kjq openmpi/4.0.5-yl4z singularity/3.7.0-bm53
+cd ~/programming/fiesta-singularity/test/idexp3dterrain/
+mpirun -n 8 singularity run --nv ~/fiesta-cuda-slurm.sif ./fiesta.lua --kokkos-num-devices=1
+```
