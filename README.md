@@ -42,7 +42,6 @@ Paths will likely need to be modified.
 #SBATCH --partition=singleGPU
 #SBATCH --gres=gpu:1
 
-export OMPI_MCA_fs_ufs_lock_algorithm=1
 module purge
 module load gcc/10.2.0-3kjq intel-mpi/2020.2.254-rxha cuda/11.2.0-w6mf cmake/3.19.5-22ub hdf5/1.10.7-pvyi
 cd ~/programming/fiesta-hand/test/idexp3dterrain/
