@@ -93,7 +93,7 @@ make -j
 
 Make sure to read/modify the script before use.
 Paths will likely need to be modified.
-This example uses hashes to uniquely identify packages which may or may not be necessary.
+This example uses hashes to uniquely identify packages; this may or may not be necessary.
 ```
 #!/bin/bash
 #SBATCH --job-name=fiesta-spack
