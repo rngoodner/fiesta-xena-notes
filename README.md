@@ -179,7 +179,7 @@ Singularity is a container platform that is common on HPC Clusters.
 
 ## Definition file
 
-This definition file uses a nvidia cuda container from dockerhub as a base to build on top of.
+This definition file uses a nvidia cuda container from dockerhub as a base to build ontop of.
 To build a Singularity container one must have root access.
 For this test I built the container on a local box and the uploaded it to Xena.
 To build a container from a definition file use: `sudo /usr/local/bin/singularity build <output-name>.sif <definition-file>`
