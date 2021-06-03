@@ -7,7 +7,7 @@ These notes will cover three methods: 1. by hand, 2. with Spack, and 3. with Sin
 
 - [CARC HPC documentation](https://github.com/UNM-CARC/QuickBytes/blob/master/README.md)
 - [Lmod documentation](https://lmod.readthedocs.io/en/latest/010_user.html)
-- [documentation](https://spack.readthedocs.io/en/latest/)
+- [Spack documentation](https://spack.readthedocs.io/en/latest/)
 - [Singularity documentation](https://sylabs.io/guides/3.7/user-guide/)
 
 # 1. By hand
