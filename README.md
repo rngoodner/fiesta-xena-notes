@@ -14,6 +14,7 @@ These notes will cover three methods: 1. by hand, 2. with Spack, and 3. with Sin
 
 This method uses what is already available on the system.
 We will use environment modules (Lmod).
+Note that the versions of openmpi and hdf5 available on Xena were incompatible, so this method uses intel-mpi.
 
 ## Build
 
