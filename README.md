@@ -38,7 +38,7 @@ Paths will likely need to be modified.
 #SBATCH --job-name=fiesta-hand
 #SBATCH --output=./logs/fiesta-hand.%J.out
 #SBATCH --error=./logs/fiesta-hand.%J.err
-#SBATCH --ntasks=8
+#SBATCH --nodes=8
 #SBATCH --time=00:30:00
 #SBATCH --partition=singleGPU
 #SBATCH --gres=gpu:1
@@ -99,7 +99,7 @@ This example uses hashes to uniquely identify packages; this may or may not be n
 #SBATCH --job-name=fiesta-spack
 #SBATCH --output=./logs/fiesta-spack.%J.out
 #SBATCH --error=./logs/fiesta-spack.%J.err
-#SBATCH --ntasks=8
+#SBATCH --nodes=8
 #SBATCH --time=00:30:00
 #SBATCH --partition=singleGPU
 #SBATCH --gres=gpu:1
@@ -269,7 +269,7 @@ Paths will likely need to be modified.
 #SBATCH --job-name=fiesta-singularity
 #SBATCH --output=./logs/fiesta-singularity.%J.out
 #SBATCH --error=./logs/fiesta-singularity.%J.err
-#SBATCH --ntasks=8
+#SBATCH --nodes=8
 #SBATCH --time=00:30:00
 #SBATCH --partition=singleGPU
 #SBATCH --gres=gpu:1
